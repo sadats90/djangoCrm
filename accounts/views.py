@@ -101,11 +101,12 @@ def userPage(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin','customer'])
 def products(request):
     products = Product.objects.all()
+    current_user = request.user.customer.id
 
-    return render(request, 'accounts/products.html', {'products': products})
+    return render(request, 'accounts/products.html', {'products': products,'current_user':current_user})
 
 
 @login_required(login_url='login')
@@ -125,7 +126,7 @@ def customers(request, pk_test):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
+@allowed_users(allowed_roles=['admin','customer'])
 def createOrder(request, pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'status'), extra=10)
     customer = Customer.objects.get(id=pk)
